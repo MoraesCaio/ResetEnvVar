@@ -1,14 +1,10 @@
 using System;
-using System.Diagnostics;
-using System.Deployment.Application;
-using System.Reflection;
-using Microsoft.Win32;
 using System.IO;
 
 
 namespace ResetEnvVar
 {
-    class Program
+	class Program
     {
         //MACHINE
         static void deleteEnvVarMCH(string variavel){
@@ -84,77 +80,36 @@ namespace ResetEnvVar
             setEnvVarMCH(variavel, valor);
         }
 
-        static string thisProcessPath(){
-            Process[] proc = Process.GetProcesses();
-            foreach(Process p in proc){
-                if(p.ProcessName.Contains("ResetEnvVar.exe")){
-                    return p.Modules[0].FileName;
-                }
-            }
-            return "";
-        }
         static void Main(string[] args)
         {
-            string pathVLibras = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, @"VLibras");
-        	setEnvVarUSR("PATH_VLIBRAS",   pathVLibras);
-        	setEnvVarUSR("AELIUS_DATA",    pathVLibras + @"\aelius_data");
-        	setEnvVarUSR("HUNPOS_TAGGER",  pathVLibras + @"\bin\hunpos-tag.exe");
-        	setEnvVarUSR("NLTK_DATA",      pathVLibras + @"\nltk_data");
-        	setEnvVarUSR("TRANSLATE_DATA", pathVLibras + @"\translate\data");
-
-       		//SETTING PYTHONPATH
+            //ex: GetCurrentDirectory().FullName -> folder1/folder2/folder3/
+            //GetParent() -> folder1/folder2/
+            //Combine(dir, @"Python") -> folder1/folder2/Python/
         	string python = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, @"Python");
-            string valor = python+@";"+
-	            python + @"\Scripts;"+
-	            python + @"\Lib\site-packages;"+
-	            pathVLibras + @";"+
-	            pathVLibras + @"\bin;"+
-	            pathVLibras + @"\translate\src;"+
-	            pathVLibras + @"\Clipboard;"+
-	            pathVLibras + @"\update;"+
-	            pathVLibras + @"\nltk_data;"+
+            string pathVLibras = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, @"VLibras");
+
+            //SETTING VLIBRAS VARIABLES
+            setEnvVarUSR("PATH_VLIBRAS",   pathVLibras);
+            setEnvVarUSR("AELIUS_DATA",    pathVLibras + @"\aelius_data");
+            setEnvVarUSR("HUNPOS_TAGGER",  pathVLibras + @"\bin\hunpos-tag.exe");
+            setEnvVarUSR("NLTK_DATA",      pathVLibras + @"\nltk_data");
+            setEnvVarUSR("TRANSLATE_DATA", pathVLibras + @"\translate\data");
+
+            //SETTING PYTHONPATH (PORTABLE VERSION - 2.7.12)
+            string pythonPath = python+@";" + 
+	            python + @"\Scripts;" + 
+	            python + @"\Lib\site-packages;" + 
+	            pathVLibras + @";" + 
+	            pathVLibras + @"\bin;" + 
+	            pathVLibras + @"\translate\src;" + 
+	            pathVLibras + @"\Clipboard;" + 
+	            pathVLibras + @"\update;" + 
+	            pathVLibras + @"\nltk_data;" + 
 	            pathVLibras + @"\Aelius";
 
-	            if(Environment.GetEnvironmentVariable("PYTHONPATH", EnvironmentVariableTarget.Machine) != null ||
-                    Environment.GetEnvironmentVariable("PYTHONPATH", EnvironmentVariableTarget.Machine) == ""){
-		            string pythonPathAtual = Environment.GetEnvironmentVariable("PYTHONPATH", EnvironmentVariableTarget.Machine);
-                    if(pythonPathAtual.Contains(python) && pythonPathAtual.Contains(@"\Aelius")){
-                        int comeco = pythonPathAtual.IndexOf(python);
-                        int fim = pythonPathAtual.IndexOf(@"\Aelius");
-                        string substring = pythonPathAtual.Substring(comeco, fim - comeco + (@"\Aelius".Length + 1));
-                        pythonPathAtual = pythonPathAtual.Remove(comeco, substring.Length);
-                    }
+            setEnvVarUSR("PYTHONPATH", pythonPath);
 
-                    setEnvVarMCH("PYTHONPATH", valor + ";" + pythonPathAtual);
-
-                }else{
-                    Console.WriteLine("else");
-	            	setEnvVarMCH("PYTHONPATH", valor);
-	            }
-
-	            string pathPython2 = python+@";" + 
-                python + @"\Scripts;";
-
-	        	if(Environment.GetEnvironmentVariable("Path", EnvironmentVariableTarget.Machine) != null){
-	        		string varPath = Environment.GetEnvironmentVariable("Path", EnvironmentVariableTarget.Machine);
-                    if(varPath.Contains(python) && varPath.Contains(@"\Scripts")){
-                        int comeco = varPath.IndexOf(python);
-                        int fim = varPath.LastIndexOf(@"\Scripts");
-                        string substring = varPath.Substring(comeco, fim - comeco + (@"\Scripts".Length+1));
-                        varPath = varPath.Remove(comeco, substring.Length);
-                    }
-	        		if(!varPath.Contains(pathPython2)){
-                        if(varPath.EndsWith(";")){
-                            setEnvVarMCH("Path", varPath + pathPython2);
-                        }else{
-    	        			setEnvVarMCH("Path", varPath + ";" + pathPython2);
-                        }
-	        		}
-	        	}else{
-	        		setEnvVarMCH("Path", pathPython2);
-	        	}
             Console.WriteLine("Variáveis configuradas.");
-            Console.ReadKey();
         }
     }
 }
