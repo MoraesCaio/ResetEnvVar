@@ -11,7 +11,7 @@ namespace ResetEnvVar
     class Program
     {
         //MACHINE
-        static void apagarVarEnvMCH(string variavel){
+        static void setEnvVarMCH(string variavel){
     		try{
 	        	Console.WriteLine("Variável "+variavel+":");
 	        	string t = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.Machine);
@@ -27,7 +27,7 @@ namespace ResetEnvVar
     		}
         }
 
-        static void criarVarEnvMCH(string variavel, string valor){
+        static void setEnvVarMCH(string variavel, string valor){
     		try{
 	        	Console.WriteLine("Variável "+variavel+":");
 	        	string t = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.Machine);
@@ -45,7 +45,7 @@ namespace ResetEnvVar
         }
 
         //USER
-		static void apagarVarEnvUSR(string variavel){
+		static void setEnvVarUSR(string variavel){
     		try{
 	        	Console.WriteLine("Variável "+variavel+":");
 	        	string t = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.User);
@@ -61,7 +61,7 @@ namespace ResetEnvVar
     		}
         }
 
-        static void criarVarEnvUSR(string variavel, string valor){
+        static void setEnvVarUSR(string variavel, string valor){
     		try{
 	        	Console.WriteLine("Variável "+variavel+":");
 	        	string t = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.User);
@@ -79,9 +79,9 @@ namespace ResetEnvVar
         }
 
         //BOTH
-        static void criarVarEnv(string variavel, string valor){
-            criarVarEnvUSR(variavel, valor);
-            criarVarEnvMCH(variavel, valor);
+        static void setEnvVar(string variavel, string valor){
+            setEnvVarUSR(variavel, valor);
+            setEnvVarMCH(variavel, valor);
         }
 
         static string thisProcessPath(){
@@ -95,20 +95,15 @@ namespace ResetEnvVar
         }
         static void Main(string[] args)
         {
-            //var currentPath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-            //currentPath = currentPath.Replace("ResetEnvVar.exe","");
-            //var currentPath = Directory +GetParent(thisProcessPath()).FullName, @"VLibras\");
-            string pathVLibras = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName,@"VLibras");// currentPath; //@"..\VLibras";
-        	criarVarEnvUSR("PATH_VLIBRAS", pathVLibras);
-        	criarVarEnvUSR("AELIUS_DATA", pathVLibras + @"\aelius_data");
-        	criarVarEnvUSR("HUNPOS_TAGGER", pathVLibras + @"\bin\hunpos-tag.exe");
-        	criarVarEnvUSR("NLTK_DATA", pathVLibras + @"\nltk_data");
-        	criarVarEnvUSR("TRANSLATE_DATA", pathVLibras + @"\translate\data");
+            string pathVLibras = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName,@"VLibras");
+        	setEnvVarUSR("PATH_VLIBRAS", pathVLibras);
+        	setEnvVarUSR("AELIUS_DATA", pathVLibras + @"\aelius_data");
+        	setEnvVarUSR("HUNPOS_TAGGER", pathVLibras + @"\bin\hunpos-tag.exe");
+        	setEnvVarUSR("NLTK_DATA", pathVLibras + @"\nltk_data");
+        	setEnvVarUSR("TRANSLATE_DATA", pathVLibras + @"\translate\data");
 
        		//CONIFGURAÇÃO DA VARIÁVEL PYTHONPATH
         	string python = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, @"Python");
-            //@"..\Python";//pythonReg.GetValue(null).ToString();
-            //python = python.Remove(python.Length - 1).ToString();
             string valor = python+@";"+
 	            python + @"\Scripts;"+
 	            python + @"\Lib\site-packages;"+
@@ -129,11 +124,11 @@ namespace ResetEnvVar
                         pythonPathAtual = pythonPathAtual.Remove(comeco, substring.Length);
                     }
 
-                    criarVarEnvMCH("PYTHONPATH", valor+";"+pythonPathAtual);
+                    setEnvVarMCH("PYTHONPATH", valor+";"+pythonPathAtual);
 
                 }else{
                     Console.WriteLine("else");
-	            	criarVarEnvMCH("PYTHONPATH", valor);
+	            	setEnvVarMCH("PYTHONPATH", valor);
 	            }
 
 	            string pathPython2 = python+@";"+
@@ -149,16 +144,15 @@ namespace ResetEnvVar
                     }
 	        		if(!varPath.Contains(pathPython2)){
                         if(varPath.EndsWith(";")){
-                            criarVarEnvMCH("Path", varPath+pathPython2);
+                            setEnvVarMCH("Path", varPath+pathPython2);
                         }else{
-    	        			criarVarEnvMCH("Path", varPath+";"+pathPython2);
+    	        			setEnvVarMCH("Path", varPath+";"+pathPython2);
                         }
 	        		}
 	        	}else{
-	        		criarVarEnvMCH("Path", pathPython2);
+	        		setEnvVarMCH("Path", pathPython2);
 	        	}
             Console.WriteLine("Variáveis configuradas.");
-            Console.ReadKey();
         }
     }
 }
