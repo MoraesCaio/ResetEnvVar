@@ -11,14 +11,14 @@ namespace ResetEnvVar
     class Program
     {
         //MACHINE
-        static void setEnvVarMCH(string variavel){
+        static void deleteEnvVarMCH(string variavel){
     		try{
-	        	Console.WriteLine("Variável "+variavel+":");
-	        	string t = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.Machine);
+	        	Console.WriteLine("Variável " + variavel + ":");
+	        	string t = Environment.GetEnvironmentVariable(variavel, EnvironmentVariableTarget.Machine);
 	            if(t == null){
-	                Console.WriteLine(variavel+" não existe.");
+	                Console.WriteLine(variavel + " não existe.");
 	            }else{
-		        	Console.WriteLine(Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.Machine));
+		        	Console.WriteLine(Environment.GetEnvironmentVariable(variavel, EnvironmentVariableTarget.Machine));
 		        	Environment.SetEnvironmentVariable(variavel, "", EnvironmentVariableTarget.Machine);
 		        	Console.WriteLine("Apagando.");
 	            }
@@ -29,15 +29,15 @@ namespace ResetEnvVar
 
         static void setEnvVarMCH(string variavel, string valor){
     		try{
-	        	Console.WriteLine("Variável "+variavel+":");
-	        	string t = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.Machine);
+	        	Console.WriteLine("Variável " + variavel + ":");
+	        	string t = Environment.GetEnvironmentVariable(variavel, EnvironmentVariableTarget.Machine);
 	            if(t == null || t != valor){
 		        	Console.WriteLine("Criando.");
 		        	Environment.SetEnvironmentVariable(variavel, valor, EnvironmentVariableTarget.Machine);
-		        	string s = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.Machine);
-		        	Console.WriteLine("Variável "+variavel+" criada. Seu valor é: "+s+".");
+		        	string s = Environment.GetEnvironmentVariable(variavel, EnvironmentVariableTarget.Machine);
+		        	Console.WriteLine("Variável " + variavel + " criada. Seu valor é: " + s + ".");
 		        }else{
-	                Console.WriteLine(variavel+" já existe.");
+	                Console.WriteLine(variavel + " já está configurada.");
 	            }
     		}catch(Exception e){
     			Console.WriteLine("Erro {0}", e);
@@ -45,14 +45,14 @@ namespace ResetEnvVar
         }
 
         //USER
-		static void setEnvVarUSR(string variavel){
+		static void deleteEnvVarUSR(string variavel){
     		try{
-	        	Console.WriteLine("Variável "+variavel+":");
-	        	string t = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.User);
+	        	Console.WriteLine("Variável " + variavel + ":");
+	        	string t = Environment.GetEnvironmentVariable(variavel, EnvironmentVariableTarget.User);
 	            if(t == null){
-	                Console.WriteLine(variavel+" não existe.");
+	                Console.WriteLine(variavel + " não existe.");
 	            }else{
-		        	Console.WriteLine(Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.User));
+		        	Console.WriteLine(Environment.GetEnvironmentVariable(variavel, EnvironmentVariableTarget.User));
 		        	Environment.SetEnvironmentVariable(variavel, "", EnvironmentVariableTarget.User);
 		        	Console.WriteLine("Apagando.");
 	            }
@@ -63,15 +63,15 @@ namespace ResetEnvVar
 
         static void setEnvVarUSR(string variavel, string valor){
     		try{
-	        	Console.WriteLine("Variável "+variavel+":");
-	        	string t = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.User);
+	        	Console.WriteLine("Variável " + variavel + ":");
+	        	string t = Environment.GetEnvironmentVariable(variavel, EnvironmentVariableTarget.User);
 	            if(t == null || t != valor){
 		        	Console.WriteLine("Criando.");
 		        	Environment.SetEnvironmentVariable(variavel, valor, EnvironmentVariableTarget.User);
-		        	string s = Environment.GetEnvironmentVariable(variavel,EnvironmentVariableTarget.User);
-		        	Console.WriteLine("Variável "+variavel+" criada. Seu valor é: "+s+".");
+		        	string s = Environment.GetEnvironmentVariable(variavel, EnvironmentVariableTarget.User);
+		        	Console.WriteLine("Variável " + variavel + " criada. Seu valor é: " + s + ".");
 		        }else{
-	                Console.WriteLine(variavel+" já existe.");
+	                Console.WriteLine(variavel + " já está configurada.");
 	            }
     		}catch(Exception e){
     			Console.WriteLine("Erro {0}", e);
@@ -95,14 +95,14 @@ namespace ResetEnvVar
         }
         static void Main(string[] args)
         {
-            string pathVLibras = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName,@"VLibras");
-        	setEnvVarUSR("PATH_VLIBRAS", pathVLibras);
-        	setEnvVarUSR("AELIUS_DATA", pathVLibras + @"\aelius_data");
-        	setEnvVarUSR("HUNPOS_TAGGER", pathVLibras + @"\bin\hunpos-tag.exe");
-        	setEnvVarUSR("NLTK_DATA", pathVLibras + @"\nltk_data");
+            string pathVLibras = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, @"VLibras");
+        	setEnvVarUSR("PATH_VLIBRAS",   pathVLibras);
+        	setEnvVarUSR("AELIUS_DATA",    pathVLibras + @"\aelius_data");
+        	setEnvVarUSR("HUNPOS_TAGGER",  pathVLibras + @"\bin\hunpos-tag.exe");
+        	setEnvVarUSR("NLTK_DATA",      pathVLibras + @"\nltk_data");
         	setEnvVarUSR("TRANSLATE_DATA", pathVLibras + @"\translate\data");
 
-       		//CONIFGURAÇÃO DA VARIÁVEL PYTHONPATH
+       		//SETTING PYTHONPATH
         	string python = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, @"Python");
             string valor = python+@";"+
 	            python + @"\Scripts;"+
@@ -114,6 +114,7 @@ namespace ResetEnvVar
 	            pathVLibras + @"\update;"+
 	            pathVLibras + @"\nltk_data;"+
 	            pathVLibras + @"\Aelius";
+
 	            if(Environment.GetEnvironmentVariable("PYTHONPATH", EnvironmentVariableTarget.Machine) != null ||
                     Environment.GetEnvironmentVariable("PYTHONPATH", EnvironmentVariableTarget.Machine) == ""){
 		            string pythonPathAtual = Environment.GetEnvironmentVariable("PYTHONPATH", EnvironmentVariableTarget.Machine);
@@ -124,15 +125,15 @@ namespace ResetEnvVar
                         pythonPathAtual = pythonPathAtual.Remove(comeco, substring.Length);
                     }
 
-                    setEnvVarMCH("PYTHONPATH", valor+";"+pythonPathAtual);
+                    setEnvVarMCH("PYTHONPATH", valor + ";" + pythonPathAtual);
 
                 }else{
                     Console.WriteLine("else");
 	            	setEnvVarMCH("PYTHONPATH", valor);
 	            }
 
-	            string pathPython2 = python+@";"+
-                python +@"\Scripts;";
+	            string pathPython2 = python+@";" + 
+                python + @"\Scripts;";
 
 	        	if(Environment.GetEnvironmentVariable("Path", EnvironmentVariableTarget.Machine) != null){
 	        		string varPath = Environment.GetEnvironmentVariable("Path", EnvironmentVariableTarget.Machine);
@@ -144,15 +145,16 @@ namespace ResetEnvVar
                     }
 	        		if(!varPath.Contains(pathPython2)){
                         if(varPath.EndsWith(";")){
-                            setEnvVarMCH("Path", varPath+pathPython2);
+                            setEnvVarMCH("Path", varPath + pathPython2);
                         }else{
-    	        			setEnvVarMCH("Path", varPath+";"+pathPython2);
+    	        			setEnvVarMCH("Path", varPath + ";" + pathPython2);
                         }
 	        		}
 	        	}else{
 	        		setEnvVarMCH("Path", pathPython2);
 	        	}
             Console.WriteLine("Variáveis configuradas.");
+            Console.ReadKey();
         }
     }
 }
