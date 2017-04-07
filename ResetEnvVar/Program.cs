@@ -117,11 +117,10 @@ namespace ResetEnvVar
         {
             if(args.Length == 0 || (args.Length == 1 && args[0] == "-i"))
             {
-                //ex: GetCurrentDirectory().FullName -> folder1/folder2/folder3/
-                //GetParent() -> folder1/folder2/
-                //Combine(dir, @"Python") -> folder1/folder2/Python/
-            	string python = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, @"Python");
-                string pathVLibras = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, @"VLibras");
+                string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string mainFolder = Path.Combine(local, "VLibras");
+                string python = Path.Combine(mainFolder, @"Python");
+                string pathVLibras = Path.Combine(mainFolder, @"VLibras");
 
                 //SETTING VLIBRAS VARIABLES
                 setEnvVarUSR("PATH_VLIBRAS",   pathVLibras);
